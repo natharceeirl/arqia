@@ -1,0 +1,128 @@
+{
+  "nombre_proyecto": "Local comercial — Sachaca",
+  "tipo_proyecto": "Local comercial",
+  "ubicacion": {
+    "distrito": "Sachaca",
+    "ciudad": "Arequipa",
+    "pais": "Perú",
+    "contexto": [
+      "campiña"
+    ]
+  },
+  "terreno": {
+    "frente_m": 10.0,
+    "fondo_m": 20.0,
+    "retiro_frontal_m": null,
+    "estudio_suelos": "no"
+  },
+  "niveles": 2,
+  "altura_piso_m": 3.0,
+  "ambientes": [
+    {
+      "nombre": "Tienda",
+      "nivel": 1,
+      "tipo": "publico",
+      "area_objetivo_m2": 120
+    },
+    {
+      "nombre": "Recepción y caja",
+      "nivel": 1,
+      "tipo": "publico",
+      "area_objetivo_m2": 16
+    },
+    {
+      "nombre": "Almacén",
+      "nivel": 1,
+      "tipo": "servicio",
+      "area_objetivo_m2": 16
+    },
+    {
+      "nombre": "SS.HH. damas",
+      "nivel": 1,
+      "tipo": "servicio",
+      "area_objetivo_m2": 7
+    },
+    {
+      "nombre": "SS.HH. varones",
+      "nivel": 1,
+      "tipo": "servicio",
+      "area_objetivo_m2": 7
+    },
+    {
+      "nombre": "Oficina administrativa",
+      "nivel": 2,
+      "tipo": "privado",
+      "area_objetivo_m2": 76
+    },
+    {
+      "nombre": "Gerencia",
+      "nivel": 2,
+      "tipo": "privado",
+      "area_objetivo_m2": 26
+    },
+    {
+      "nombre": "Sala de reuniones",
+      "nivel": 2,
+      "tipo": "privado",
+      "area_objetivo_m2": 32
+    },
+    {
+      "nombre": "Archivo",
+      "nivel": 2,
+      "tipo": "servicio",
+      "area_objetivo_m2": 10
+    },
+    {
+      "nombre": "Kitchenette",
+      "nivel": 2,
+      "tipo": "servicio",
+      "area_objetivo_m2": 8
+    },
+    {
+      "nombre": "SS.HH. damas",
+      "nivel": 2,
+      "tipo": "servicio",
+      "area_objetivo_m2": 6
+    },
+    {
+      "nombre": "SS.HH. varones",
+      "nivel": 2,
+      "tipo": "servicio",
+      "area_objetivo_m2": 6
+    }
+  ],
+  "presupuesto": {
+    "moneda": "PEN",
+    "monto": 250000,
+    "referencial": true
+  },
+  "preferencias": {
+    "luz_natural": "alta",
+    "estilo": "moderno",
+    "acceso_independiente_n2": null
+  },
+  "origen": {
+    "tipo_proyecto": "usuario",
+    "ubicacion.distrito": "usuario",
+    "terreno.frente_m": "usuario",
+    "terreno.fondo_m": "usuario",
+    "terreno.estudio_suelos": "usuario",
+    "terreno.retiro_frontal_m": "desconocido",
+    "niveles": "usuario",
+    "presupuesto.monto": "usuario",
+    "preferencias.luz_natural": "usuario",
+    "confirmado": "usuario",
+    "ambientes.1.Tienda.area": "supuesto",
+    "ambientes.1.Recepción y caja.area": "supuesto",
+    "ambientes.1.Almacén.area": "supuesto",
+    "ambientes.1.SS.HH. damas.area": "supuesto",
+    "ambientes.1.SS.HH. varones.area": "supuesto",
+    "ambientes.2.Oficina administrativa.area": "supuesto",
+    "ambientes.2.Gerencia.area": "supuesto",
+    "ambientes.2.Sala de reuniones.area": "supuesto",
+    "ambientes.2.Archivo.area": "supuesto",
+    "ambientes.2.Kitchenette.area": "supuesto",
+    "ambientes.2.SS.HH. damas.area": "supuesto",
+    "ambientes.2.SS.HH. varones.area": "supuesto"
+  }
+}

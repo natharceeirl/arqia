@@ -1,0 +1,122 @@
+# Base de avisos del lugar de ARQIA.
+# Cada aviso lo muestra el asistente cuando se cumple su condición. Claude no puede crear avisos:
+# solo elige entre los que el servidor activa. Los textos son prudentes y remiten al profesional.
+# ESTADO DE REVISIÓN: primera versión preparada por el equipo técnico; debe revisarla un integrante
+# de Arquitectura o Ingeniería Civil antes de presentarla como verificada.
+
+version: "2026-11-24"
+
+avisos:
+  - id: AV-SUELOS
+    titulo: Estudio de mecánica de suelos
+    texto: >-
+      La cimentación se define a partir de un estudio de mecánica de suelos firmado por un profesional.
+      ARQIA no deduce el tipo de suelo ni su capacidad a partir de la ubicación.
+    referencia: RNE, Norma Técnica E.050 Suelos y Cimentaciones
+    url: https://www.gob.pe/institucion/munisantamariadelmar/informes-publicaciones/2619712-e-050-suelos-y-cimentaciones
+    aplica_si: {siempre: true}
+    verificacion:
+      titulo: Estudio de mecánica de suelos disponible
+      campo: terreno.estudio_suelos
+      cumple_si: ["si"]
+      si_no: pendiente
+    revisado_por: Pendiente de revisión del equipo
+    tema: terreno
+
+  - id: AV-CAMPINA
+    titulo: Zonificación en zona de campiña
+    texto: >-
+      Cerca de la campiña arequipeña hay áreas con zonificación agrícola o en proceso de cambio de uso, y
+      su situación ha sido objeto de medidas judiciales y de la actualización del Plan de Desarrollo
+      Metropolitano. Antes de diseñar, confirma la zonificación del lote con la municipalidad.
+    referencia: Plan de Desarrollo Metropolitano de Arequipa y certificado de zonificación y vías (Ley 29090)
+    url: https://elbuho.pe/?p=442854
+    aplica_si: {contexto_incluye: ["campiña", "campina", "agrícola", "agricola", "chacra"]}
+    verificacion:
+      titulo: Zonificación compatible con uso comercial
+      estado: pendiente
+    revisado_por: Pendiente de revisión del equipo
+    tema: ubicacion
+
+  - id: AV-PARAMETROS
+    titulo: Certificado de parámetros urbanísticos y edificatorios
+    texto: >-
+      La municipalidad distrital emite este certificado con la zonificación, los usos permitidos, la altura
+      máxima y los retiros del lote. Es requisito para tramitar la licencia de edificación.
+    referencia: Ley 29090, Ley de regulación de habilitaciones urbanas y de edificaciones
+    url: https://www.congreso.gob.pe/Docs/DGP/DIDP/files/ley_29090.pdf
+    aplica_si: {siempre: true}
+    verificacion:
+      titulo: Retiro frontal confirmado con parámetros urbanísticos
+      campo: terreno.retiro_frontal_m
+      cumple_si_definido: true
+      si_no: pendiente
+    revisado_por: Pendiente de revisión del equipo
+    tema: terreno
+
+  - id: AV-SISMO
+    titulo: Diseño sismorresistente
+    texto: >-
+      Arequipa es una zona de alta sismicidad. La estructura debe diseñarla un ingeniero civil aplicando la
+      norma de diseño sismorresistente vigente; el esquema de ARQIA no es un diseño estructural.
+    referencia: RNE, Norma Técnica E.030 Diseño Sismorresistente
+    url: https://cdn.www.gob.pe/uploads/document/file/9902957/8081915-nt-e-030-diseno-sismorresistente-2026.pdf
+    aplica_si: {ciudad_en: ["arequipa"]}
+    verificacion:
+      titulo: Diseño estructural sismorresistente
+      estado: revision_profesional
+    revisado_por: Pendiente de revisión del equipo
+    tema: ubicacion
+
+  - id: AV-SACHACA-SUELO
+    titulo: Estudio de zonificación sísmica-geotécnica de Sachaca
+    texto: >-
+      Existe un estudio de zonificación sísmica-geotécnica de la zona urbana de Sachaca que puede orientar al
+      profesional sobre el comportamiento del suelo. No reemplaza el estudio de suelos del lote.
+    referencia: Bejarano, Tavera y otros, Zonificación sísmica-geotécnica del distrito de Sachaca (IGP)
+    url: https://app.ingemmet.gob.pe/biblioteca/pdf/CPG17-163.pdf
+    aplica_si: {distrito_en: ["sachaca"]}
+    revisado_por: Pendiente de revisión del equipo
+    tema: terreno
+
+  - id: AV-ACCESIBILIDAD
+    titulo: Accesibilidad universal
+    texto: >-
+      Un local comercial abierto al público debe permitir el acceso de personas con discapacidad. Rampas,
+      anchos de puerta y servicios higiénicos accesibles los define el profesional con la norma vigente.
+    referencia: RNE, Norma Técnica A.120 Accesibilidad universal en edificaciones
+    url: null
+    aplica_si: {tipo_proyecto_incluye: ["comercial", "tienda", "restaurante", "oficina", "clínica", "clinica"]}
+    verificacion:
+      titulo: Accesibilidad universal
+      estado: revision_profesional
+    revisado_por: Pendiente de revisión del equipo
+    tema: programa
+
+  - id: AV-EVACUACION
+    titulo: Seguridad y evacuación
+    texto: >-
+      Las rutas de evacuación, el aforo y las señales de seguridad se calculan según el uso y la ocupación.
+      Con dos o más niveles abiertos al público conviene revisarlo desde el inicio.
+    referencia: RNE, Norma Técnica A.130 Requisitos de seguridad
+    url: null
+    aplica_si: {niveles_min: 2}
+    verificacion:
+      titulo: Evacuación y aforo
+      estado: revision_profesional
+    revisado_por: Pendiente de revisión del equipo
+    tema: programa
+
+  - id: AV-COMERCIO
+    titulo: Condiciones para locales comerciales
+    texto: >-
+      La cantidad de servicios higiénicos y otras condiciones de un local comercial dependen de su área y su
+      aforo. El profesional debe confirmarlas con la norma de comercio vigente.
+    referencia: RNE, Norma Técnica A.070 Comercio
+    url: null
+    aplica_si: {tipo_proyecto_incluye: ["comercial", "tienda"]}
+    verificacion:
+      titulo: Servicios higiénicos según aforo
+      estado: revision_profesional
+    revisado_por: Pendiente de revisión del equipo
+    tema: programa

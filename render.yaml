@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: arqia
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/salud
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ARQIA_MODELO
+        value: claude-sonnet-5-5

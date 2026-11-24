@@ -1,0 +1,14 @@
+[
+  {"rol": "asistente", "texto": "Hola, soy el Asistente ARQIA. Te haré algunas preguntas para preparar tu propuesta. ¿Qué tipo de proyecto quieres desarrollar?"},
+  {"rol": "usuario", "texto": "Necesito un local comercial de dos pisos: tienda, recepción, almacén y baños abajo; oficinas, gerencia y sala de reuniones arriba. Mucha luz natural."},
+  {"rol": "asistente", "texto": "Registré un local comercial de dos niveles con su programa de ambientes. ¿Dónde se ubica el terreno?"},
+  {"rol": "usuario", "texto": "En Sachaca, Arequipa, cerca de la zona de campiña."},
+  {"rol": "asistente", "texto": "Anotado. Como el lote está cerca de la campiña, agregué al resumen puntos a revisar: zonificación, estudio de suelos y sismicidad. ¿Cuáles son las medidas del terreno?", "avisos": ["AV-CAMPINA", "AV-SUELOS", "AV-SISMO"]},
+  {"rol": "usuario", "texto": "10 metros de frente por 20 de fondo."},
+  {"rol": "asistente", "texto": "Registré un terreno de 10 × 20 m. ¿El terreno cuenta con un estudio de mecánica de suelos?", "opciones": ["Sí, ya lo tengo", "Todavía no", "No sé qué es"]},
+  {"rol": "usuario", "texto": "Todavía no."},
+  {"rol": "asistente", "texto": "Queda como pendiente en la ficha. ¿Conoces el retiro frontal que exige la municipalidad?"},
+  {"rol": "usuario", "texto": "No lo sé todavía. El presupuesto es de unos 250 000 soles."},
+  {"rol": "asistente", "texto": "Perfecto. Usaré retiro cero como supuesto hasta confirmar los parámetros urbanísticos. Revisa el resumen: ¿genero las alternativas?", "opciones": ["Sí, generar alternativas", "Quiero cambiar algo"]},
+  {"rol": "usuario", "texto": "Sí, generar alternativas."}
+]
