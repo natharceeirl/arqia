@@ -94,7 +94,7 @@ def explicar(brief: dict, alternativas: list[dict]) -> dict:
         import anthropic
         cliente = anthropic.Anthropic(api_key=clave, timeout=30.0, max_retries=1)
         resp = cliente.messages.create(
-            model=MODELO, max_tokens=1500, temperature=0.2, tools=[HERRAMIENTA],
+            model=MODELO, max_tokens=1500, tools=[HERRAMIENTA],
             tool_choice={"type": "tool", "name": "redactar_comparacion"},
             system=("Eres el Asistente ARQIA. Explicas a un cliente, en español claro y breve, las diferencias entre alternativas "
                     "arquitectónicas preliminares. Usa solo los indicadores y verificaciones entregados; no inventes cifras ni "

@@ -390,7 +390,7 @@ def turno(brief: Brief, historial: list[dict], mensaje: str | None, mostrados: l
 
     for _ in range(4):
         resp = cliente.messages.create(model=MODELO, max_tokens=1200, system=SISTEMA, tools=HERRAMIENTAS,
-                                       tool_choice={"type": "any"}, messages=mensajes, temperature=0.2)
+                                       tool_choice={"type": "any"}, messages=mensajes)
         bloques = []
         for b in resp.content:
             if b.type == "text" and b.text:
