@@ -1,0 +1,356 @@
+{
+ "fuente": {
+  "nombre": "Cuadro de Valores Unitarios Oficiales de Edificación para la Costa (excepto Lima Metropolitana y Callao)",
+  "vigencia": "Del 1 al 30 de noviembre de 2026",
+  "base_legal": "Resolución Directoral N° 00015-2025-VIVIENDA/VMVU-DGPRVU (22 de diciembre de 2025), actualizado con el IPC",
+  "publicado_por": "Colegio de Arquitectos del Perú",
+  "url": "https://cap.org.pe/wp-content/uploads/2026/11/CVU_NOVIEMBRE_COSTA_2026.pdf",
+  "ambito": "Localidades sobre la vertiente occidental de la cordillera de los Andes (incluye la ciudad de Arequipa)",
+  "unidad": "Soles por m² de área techada",
+  "naturaleza": "Valor oficial referencial para valorización de edificaciones; no es un presupuesto de obra",
+  "estado_revision": "Valores transcritos del PDF oficial; verificar contra el documento antes de presentarlos como definitivos"
+ },
+ "partidas": [
+  {
+   "id": "muros",
+   "nombre": "Muros y columnas",
+   "categorias": [
+    {
+     "categoria": "A",
+     "valor_m2": 678.63,
+     "descripcion": "Estructuras laminares curvadas de concreto armado"
+    },
+    {
+     "categoria": "B",
+     "valor_m2": 437.53,
+     "descripcion": "Columnas, vigas o placas de concreto armado o metálicas"
+    },
+    {
+     "categoria": "C",
+     "valor_m2": 301.19,
+     "descripcion": "Placas de concreto, albañilería armada o ladrillo con columnas y vigas de concreto"
+    },
+    {
+     "categoria": "D",
+     "valor_m2": 291.26,
+     "descripcion": "Ladrillo o sillar sin elementos de concreto armado; drywall"
+    },
+    {
+     "categoria": "E",
+     "valor_m2": 205.05,
+     "descripcion": "Adobe, tapial, quincha o caña"
+    },
+    {
+     "categoria": "F",
+     "valor_m2": 154.42,
+     "descripcion": "Maderas diversas; drywall sin techo"
+    },
+    {
+     "categoria": "G",
+     "valor_m2": 90.99,
+     "descripcion": "Pirca de piedra con barro"
+    }
+   ]
+  },
+  {
+   "id": "techos",
+   "nombre": "Techos",
+   "categorias": [
+    {
+     "categoria": "A",
+     "valor_m2": 412.18,
+     "descripcion": "Losa de concreto armado de grandes luces y sobrecargas"
+    },
+    {
+     "categoria": "B",
+     "valor_m2": 268.92,
+     "descripcion": "Losa aligerada o maciza inclinada"
+    },
+    {
+     "categoria": "C",
+     "valor_m2": 222.17,
+     "descripcion": "Losa aligerada horizontal"
+    },
+    {
+     "categoria": "D",
+     "valor_m2": 147.13,
+     "descripcion": "Calamina metálica, fibrocemento o caña sobre viguetas"
+    },
+    {
+     "categoria": "E",
+     "valor_m2": 52.57,
+     "descripcion": "Madera impermeabilizada, policarbonato"
+    },
+    {
+     "categoria": "F",
+     "valor_m2": 28.91,
+     "descripcion": "Calamina o teja sobre madera corriente"
+    },
+    {
+     "categoria": "G",
+     "valor_m2": 19.87,
+     "descripcion": "Madera rústica o caña con barro"
+    },
+    {
+     "categoria": "H",
+     "valor_m2": 0.0,
+     "descripcion": "Sin techo"
+    }
+   ]
+  },
+  {
+   "id": "pisos",
+   "nombre": "Pisos",
+   "categorias": [
+    {
+     "categoria": "A",
+     "valor_m2": 364.0,
+     "descripcion": "Mármol importado, piedra natural, porcelanato"
+    },
+    {
+     "categoria": "B",
+     "valor_m2": 218.17,
+     "descripcion": "Mármol nacional, parquet, cerámica importada"
+    },
+    {
+     "categoria": "C",
+     "valor_m2": 143.59,
+     "descripcion": "Madera machihembrada fina, terrazo"
+    },
+    {
+     "categoria": "D",
+     "valor_m2": 126.67,
+     "descripcion": "Parquet de primera, cerámica nacional, piso laminado"
+    },
+    {
+     "categoria": "E",
+     "valor_m2": 84.87,
+     "descripcion": "Parquet de segunda, cemento con canto rodado"
+    },
+    {
+     "categoria": "F",
+     "valor_m2": 57.96,
+     "descripcion": "Loseta corriente, canto rodado, alfombra"
+    },
+    {
+     "categoria": "G",
+     "valor_m2": 51.15,
+     "descripcion": "Vinílico, cemento coloreado"
+    },
+    {
+     "categoria": "H",
+     "valor_m2": 32.01,
+     "descripcion": "Cemento pulido, ladrillo corriente, entablado"
+    },
+    {
+     "categoria": "I",
+     "valor_m2": 6.4,
+     "descripcion": "Tierra compactada"
+    }
+   ]
+  },
+  {
+   "id": "puertas_ventanas",
+   "nombre": "Puertas y ventanas",
+   "categorias": [
+    {
+     "categoria": "A",
+     "valor_m2": 368.3,
+     "descripcion": "Aluminio pesado, madera fina ornamental, vidrio aislante"
+    },
+    {
+     "categoria": "B",
+     "valor_m2": 194.13,
+     "descripcion": "Aluminio o madera fina de diseño especial, vidrio templado"
+    },
+    {
+     "categoria": "C",
+     "valor_m2": 125.47,
+     "descripcion": "Aluminio o madera fina, vidrio laminado"
+    },
+    {
+     "categoria": "D",
+     "valor_m2": 109.9,
+     "descripcion": "Ventanas de aluminio, puertas de madera selecta"
+    },
+    {
+     "categoria": "E",
+     "valor_m2": 94.04,
+     "descripcion": "Ventanas de fierro, puertas de madera selecta"
+    },
+    {
+     "categoria": "F",
+     "valor_m2": 70.59,
+     "descripcion": "Fierro o aluminio industrial, puertas MDF o HDF"
+    },
+    {
+     "categoria": "G",
+     "valor_m2": 38.14,
+     "descripcion": "Madera corriente con marcos de PVC o madera"
+    },
+    {
+     "categoria": "H",
+     "valor_m2": 19.07,
+     "descripcion": "Madera rústica"
+    },
+    {
+     "categoria": "I",
+     "valor_m2": 0.0,
+     "descripcion": "Sin puertas ni ventanas"
+    }
+   ]
+  },
+  {
+   "id": "revestimientos",
+   "nombre": "Revestimientos",
+   "categorias": [
+    {
+     "categoria": "A",
+     "valor_m2": 396.97,
+     "descripcion": "Mármol importado, madera fina, baldosa acústica en techo"
+    },
+    {
+     "categoria": "B",
+     "valor_m2": 300.76,
+     "descripcion": "Mármol nacional, enchapes de madera fina en techos"
+    },
+    {
+     "categoria": "C",
+     "valor_m2": 223.12,
+     "descripcion": "Concreto caravista, enchapes en techos"
+    },
+    {
+     "categoria": "D",
+     "valor_m2": 171.19,
+     "descripcion": "Enchapes de madera o laminados, piedra"
+    },
+    {
+     "categoria": "E",
+     "valor_m2": 117.78,
+     "descripcion": "Ladrillo caravista"
+    },
+    {
+     "categoria": "F",
+     "valor_m2": 83.02,
+     "descripcion": "Tarrajeo frotachado, yeso moldurado, pintura lavable"
+    },
+    {
+     "categoria": "G",
+     "valor_m2": 68.07,
+     "descripcion": "Estucado de barro o yeso, pintura básica"
+    },
+    {
+     "categoria": "H",
+     "valor_m2": 27.23,
+     "descripcion": "Acabado rústico"
+    },
+    {
+     "categoria": "I",
+     "valor_m2": 0.0,
+     "descripcion": "Sin revestimiento"
+    }
+   ]
+  },
+  {
+   "id": "banos",
+   "nombre": "Baños",
+   "categorias": [
+    {
+     "categoria": "A",
+     "valor_m2": 133.95,
+     "descripcion": "Baños de lujo importados con enchape fino"
+    },
+    {
+     "categoria": "B",
+     "valor_m2": 101.85,
+     "descripcion": "Baños importados con mayólica decorativa"
+    },
+    {
+     "categoria": "C",
+     "valor_m2": 70.66,
+     "descripcion": "Baños nacionales con mayólica de color"
+    },
+    {
+     "categoria": "D",
+     "valor_m2": 37.7,
+     "descripcion": "Baños blancos nacionales"
+    },
+    {
+     "categoria": "E",
+     "valor_m2": 22.16,
+     "descripcion": "Baños con mayólica parcial"
+    },
+    {
+     "categoria": "F",
+     "valor_m2": 16.51,
+     "descripcion": "Baños blancos sin mayólica"
+    },
+    {
+     "categoria": "G",
+     "valor_m2": 11.35,
+     "descripcion": "Aparatos sanitarios básicos"
+    },
+    {
+     "categoria": "H",
+     "valor_m2": 0.0,
+     "descripcion": "Sin aparatos sanitarios"
+    }
+   ]
+  },
+  {
+   "id": "instalaciones",
+   "nombre": "Instalaciones eléctricas y sanitarias",
+   "categorias": [
+    {
+     "categoria": "A",
+     "valor_m2": 386.56,
+     "descripcion": "Aire acondicionado, bombeo, ascensor, intercomunicadores y alarmas"
+    },
+    {
+     "categoria": "B",
+     "valor_m2": 280.33,
+     "descripcion": "Bombeo, ascensor, teléfono, agua caliente y fría"
+    },
+    {
+     "categoria": "C",
+     "valor_m2": 174.44,
+     "descripcion": "Como B, sin ascensor"
+    },
+    {
+     "categoria": "D",
+     "valor_m2": 110.42,
+     "descripcion": "Agua caliente y fría, red trifásica, teléfono"
+    },
+    {
+     "categoria": "E",
+     "valor_m2": 80.26,
+     "descripcion": "Agua caliente y fría, red monofásica, teléfono"
+    },
+    {
+     "categoria": "F",
+     "valor_m2": 44.14,
+     "descripcion": "Agua fría, red monofásica, teléfono"
+    },
+    {
+     "categoria": "G",
+     "valor_m2": 23.85,
+     "descripcion": "Agua fría, red monofásica sin empotrar"
+    },
+    {
+     "categoria": "H",
+     "valor_m2": 0.0,
+     "descripcion": "Sin instalaciones"
+    }
+   ]
+  }
+ ],
+ "especificacion_por_defecto": {
+  "muros": "C",
+  "techos": "C",
+  "pisos": "D",
+  "puertas_ventanas": "D",
+  "revestimientos": "F",
+  "banos": "D",
+  "instalaciones": "D"
+ }
+}

@@ -1,8 +1,20 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Alternativa, Aviso, Brief, Decision, EstadoEntrevista, Explicacion, Mensaje } from "./tipos";
+import type { Alternativa, Aviso, Brief, Colores, Decision, EntradaCostos, EstadoEntrevista, Explicacion, Mensaje, ResultadoCostos, TablaVuoe } from "./tipos";
 
-export type Pantalla = "inicio" | "entrevista" | "trabajo" | "comparador" | "ficha";
+export type Pantalla = "inicio" | "entrevista" | "trabajo" | "costos" | "comparador" | "ficha";
+
+export const entradaVacia = (): EntradaCostos => ({ especificacion: {}, por_ambiente: {}, cotizacion: [], reemplazos: [], terreno_valor_m2: null, terreno_fuente: null });
+
+export const coloresBase = (): Colores => ({
+  modo: "material", muroExt: "#e9e4da", muroInt: "#f4f1ea", losa: "#d8d3c9", vidrio: "#9fb9c4", escalera: "#c9c3b7",
+  pisoPublico: "#ead7cc", pisoPrivado: "#d9e2e5", pisoServicio: "#e3dfd6", pisoCirculacion: "#f2efe8",
+});
+
+/** Color de referencia del piso según la categoría oficial elegida (para el modo "según material"). */
+export const COLOR_PISO: Record<string, string> = {
+  A: "#ebe8e2", B: "#c9a27c", C: "#b48a63", D: "#d9cfc1", E: "#a98c6b", F: "#cfc8bc", G: "#bcc5c3", H: "#b8b4ad", I: "#9c8b74",
+};
 
 export const briefVacio = (): Brief => ({
   nombre_proyecto: "Proyecto sin nombre",
@@ -36,6 +48,11 @@ interface Estado {
   decisiones: Decision[];
   notasCliente: string;
   esDemo: boolean;
+  costosEntrada: EntradaCostos;
+  costos: Record<string, ResultadoCostos>;
+  vuoe: TablaVuoe | null;
+  colores: Colores;
+  etiquetas: boolean;
   set: (p: Partial<Estado>) => void;
   decidir: (texto: string) => void;
   reiniciar: () => void;
@@ -62,6 +79,11 @@ export const useArqia = create<Estado>()(
       decisiones: [],
       notasCliente: "",
       esDemo: false,
+      costosEntrada: entradaVacia(),
+      costos: {},
+      vuoe: null,
+      colores: coloresBase(),
+      etiquetas: true,
       set: (p) => set(p),
       decidir: (texto) =>
         set((s) => ({ decisiones: [...s.decisiones, { fecha: new Date().toLocaleString("es-PE"), texto }] })),
@@ -70,12 +92,13 @@ export const useArqia = create<Estado>()(
           pantalla: "entrevista", brief: briefVacio(), historial: [], avisos: [], avisosMostrados: [], entrevista: null,
           pendiente: null, modo: null, alternativas: [], activa: "A", nivel: 1, vista: "planta", seleccion: null,
           explicacion: null, elegida: null, decisiones: [], notasCliente: "", esDemo: false,
+          costosEntrada: entradaVacia(), costos: {}, colores: coloresBase(),
         }),
     }),
     {
       name: "arqia-proyecto",
       partialize: (s) => {
-        const { set: _s, decidir: _d, reiniciar: _r, ...resto } = s;
+        const { set: _s, decidir: _d, reiniciar: _r, vuoe: _v, ...resto } = s;
         return resto;
       },
     },
@@ -84,3 +107,6 @@ export const useArqia = create<Estado>()(
 
 export const fmt = (v: number | null | undefined, d = 2) =>
   v === null || v === undefined || Number.isNaN(v) ? "—" : v.toLocaleString("es-PE", { minimumFractionDigits: d, maximumFractionDigits: d });
+
+export const soles = (v: number | null | undefined, d = 0) =>
+  v === null || v === undefined || Number.isNaN(v) ? "—" : `S/ ${v.toLocaleString("es-PE", { minimumFractionDigits: d, maximumFractionDigits: d })}`;

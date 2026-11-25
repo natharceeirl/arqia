@@ -1,6 +1,7 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import Planta from "./Planta";
-import { fmt, useArqia } from "./store";
+import { coloresBase, fmt, soles, useArqia } from "./store";
+import type { Colores } from "./tipos";
 import type { Alternativa, Estado, Verificacion } from "./tipos";
 
 const Vista3D = lazy(() => import("./Vista3D"));
@@ -31,9 +32,12 @@ export default function Trabajo({ onIfc }: { onIfc: () => void }) {
     window.addEventListener("keydown", tecla);
     return () => window.removeEventListener("keydown", tecla);
   });
+  const [panelColores, setPanelColores] = useState(false);
   if (!alt) return null;
   const nivel = alt.niveles.find((n) => n.numero === s.nivel) ?? alt.niveles[0];
   const ind = alt.indicadores as Record<string, number>;
+  const res = s.costos[alt.id];
+  const costoPorEspacio = s.etiquetas && res ? Object.fromEntries(res.espacios.map((x) => [x.id, x.costo])) : undefined;
 
   return (
     <div className="trabajo">
@@ -78,16 +82,25 @@ export default function Trabajo({ onIfc }: { onIfc: () => void }) {
           <span style={{ color: "var(--texto-2)", fontSize: 13, flexGrow: 1 }}>
             {alt.estrategia}
           </span>
-          <button className="btn chico" onClick={() => s.set({ pantalla: "comparador" })}>Comparar</button>
+          <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}>
+            <input type="checkbox" checked={s.etiquetas} onChange={(e) => s.set({ etiquetas: e.target.checked })} /> Etiquetas de área y costo
+          </label>
+          {s.vista === "3d" && (
+            <div style={{ position: "relative" }}>
+              <button className="btn chico" aria-expanded={panelColores} onClick={() => setPanelColores(!panelColores)}>Colores</button>
+              {panelColores && <PanelColores c={s.colores} onCambio={(c) => s.set({ colores: c })} onCerrar={() => setPanelColores(false)} />}
+            </div>
+          )}
         </div>
         <div className="lienzo" style={s.vista === "3d" ? { background: "#f6f4ef" } : undefined}>
           {s.vista === "planta" ? (
             <div style={{ width: "100%", height: "100%", maxWidth: 520, padding: 20, position: "absolute", inset: 0, margin: "0 auto" }}>
-              <Planta alt={alt} nivel={nivel} seleccion={s.seleccion} onSeleccion={(id) => s.set({ seleccion: id })} />
+              <Planta alt={alt} nivel={nivel} seleccion={s.seleccion} onSeleccion={(id) => s.set({ seleccion: id })} costos={costoPorEspacio} />
             </div>
           ) : (
             <Suspense fallback={<p className="pensando">Cargando vista 3D…</p>}>
-              <Vista3D alt={alt} nivelVisible={s.nivel} seleccion={s.seleccion} onSeleccion={(id) => s.set({ seleccion: id })} />
+              <Vista3D alt={alt} nivelVisible={s.nivel} seleccion={s.seleccion} onSeleccion={(id) => s.set({ seleccion: id })}
+                colores={s.colores} etiquetas={s.etiquetas} costos={res} />
             </Suspense>
           )}
         </div>
@@ -113,6 +126,17 @@ export default function Trabajo({ onIfc }: { onIfc: () => void }) {
             Acceso independiente a niveles superiores: {alt.indicadores.acceso_independiente_superior ? "sí" : "no"}
           </p>
         </section>
+        {res && (
+          <section>
+            <h2 className="etiqueta">Estimación de costos</h2>
+            <div className="indicadores">
+              <Ind k="Construcción" v={soles(res.totales.construccion)} />
+              <Ind k="Por m² techado" v={soles(res.totales.construccion_m2)} />
+            </div>
+            <p style={{ margin: 0, fontSize: 12, color: "var(--texto-2)", lineHeight: 1.5 }}>Valores oficiales de edificación ({res.fuente.vigencia.toLowerCase()}){res.totales.cotizacion ? " y cotizaciones importadas" : ""}. Referencial, no es presupuesto de obra.</p>
+            <button className="enlace" style={{ alignSelf: "flex-start" }} onClick={() => s.set({ pantalla: "costos" })}>Ver desglose y cambiar materiales</button>
+          </section>
+        )}
         <section>
           <h2 className="etiqueta">Verificaciones preliminares</h2>
           {alt.verificaciones.map((v) => <EstadoFila key={v.id} v={v} />)}
@@ -126,12 +150,39 @@ export default function Trabajo({ onIfc }: { onIfc: () => void }) {
   );
 }
 
+const CAMPOS_COLOR: [keyof Colores, string][] = [
+  ["muroExt", "Muros exteriores"], ["muroInt", "Muros interiores"], ["losa", "Losas"], ["vidrio", "Vidrios"], ["escalera", "Escalera"],
+  ["pisoPublico", "Pisos de uso público"], ["pisoPrivado", "Pisos de uso privado"], ["pisoServicio", "Pisos de servicio"], ["pisoCirculacion", "Pisos de circulación"],
+];
+
+function PanelColores({ c, onCambio, onCerrar }: { c: Colores; onCambio: (c: Colores) => void; onCerrar: () => void }) {
+  return (
+    <div role="dialog" aria-label="Colores del modelo 3D" className="tarjeta" style={{ position: "absolute", top: 38, right: 0, zIndex: 10, width: 280, padding: 14, display: "flex", flexDirection: "column", gap: 8, boxShadow: "0 6px 24px rgba(31,35,40,0.12)" }}>
+      <label style={{ fontSize: 12.5, display: "flex", gap: 6, alignItems: "center" }}>
+        <input type="checkbox" checked={c.modo === "material"} onChange={(e) => onCambio({ ...c, modo: e.target.checked ? "material" : "personalizado" })} />
+        Color de pisos según el material elegido
+      </label>
+      {CAMPOS_COLOR.filter(([k]) => !(c.modo === "material" && String(k).startsWith("piso"))).map(([k, nombre]) => (
+        <label key={k} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 13 }}>
+          {nombre}
+          <input type="color" value={c[k] as string} onChange={(e) => onCambio({ ...c, [k]: e.target.value })} style={{ width: 40, height: 26, border: "1px solid var(--borde-fuerte)", padding: 0, background: "none" }} />
+        </label>
+      ))}
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <button className="enlace" onClick={() => onCambio(coloresBase())}>Restablecer</button>
+        <button className="enlace" onClick={onCerrar}>Cerrar</button>
+      </div>
+    </div>
+  );
+}
+
 function Ind({ k, v }: { k: string; v: string }) {
   return <div><div className="k">{k}</div><div className="v">{v}</div></div>;
 }
 
 function Inspector({ alt }: { alt: Alternativa }) {
   const sel = useArqia((s) => s.seleccion);
+  const res = useArqia((s) => s.costos[alt.id]);
   let cuerpo: React.ReactNode = <p style={{ margin: 0, color: "var(--texto-2)", fontSize: 13 }}>Selecciona un ambiente, muro, puerta o ventana en la planta o en el 3D.</p>;
   let titulo = "Ningún elemento";
   for (const n of alt.niveles) {
@@ -145,6 +196,7 @@ function Inspector({ alt }: { alt: Alternativa }) {
           <dt>Nivel</dt><dd style={{ whiteSpace: "nowrap" }}>{n.nombre} <span className="num" style={{ color: "var(--texto-2)" }}>(+{fmt(n.cota_m)})</span></dd>
           <dt>Función</dt><dd>{e.funcion}</dd>
           <dt>Área</dt><dd className="num">{fmt(e.area_m2)} m²</dd>
+          {(() => { const c = res?.espacios.find((x) => x.id === e.id); return c ? (<><dt>Pisos y acabados</dt><dd>Pisos {c.categorias.pisos}, revestimientos {c.categorias.revestimientos}</dd><dt>Costo estimado</dt><dd className="num">{soles(c.costo)} <span style={{ color: "var(--texto-2)" }}>({fmt(c.valor_m2)} por m²)</span></dd></>) : null; })()}
           {e.area_objetivo_m2 ? (<><dt>Área objetivo</dt><dd className="num">{fmt(e.area_objetivo_m2)} m²</dd></>) : null}
           <dt>Ancho mínimo</dt><dd className="num">{fmt(e.ancho_m)} m</dd>
           <dt>Altura libre</dt><dd className="num">{fmt(n.altura_m - 0.2)} m</dd>

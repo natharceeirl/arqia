@@ -167,15 +167,14 @@ def separar_frente_fondo(ambs: list[Ambiente], capacidad_fondo: float, p: Parame
     fondo = [a for a in ambs if a.tipo == "servicio"]
     frente = [a for a in ambs if a.tipo != "servicio"]
     suma = sum(area_de(a, p) for a in fondo)
-    candidatos = sorted([a for a in frente if a.tipo == "privado"], key=lambda a: area_de(a, p))
+    principal = max(frente, key=lambda a: area_de(a, p)) if frente else None
+    candidatos = sorted([a for a in frente if a is not principal], key=lambda a: (a.tipo == "publico", area_de(a, p)))
     while suma < 0.85 * capacidad_fondo and candidatos:
         c = candidatos.pop(0)
-        if suma + area_de(c, p) <= 1.15 * capacidad_fondo and len(frente) > 1:
+        if suma + area_de(c, p) <= 1.25 * capacidad_fondo:
             frente.remove(c)
             fondo.append(c)
             suma += area_de(c, p)
-        else:
-            break
     if not frente and fondo:
         mayor = max(fondo, key=lambda a: area_de(a, p))
         fondo.remove(mayor)

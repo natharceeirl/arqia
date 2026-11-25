@@ -1,4 +1,4 @@
-import type { Alternativa, Aviso, Brief, EstadoEntrevista, Explicacion, Mensaje, VerificacionIFC } from "./tipos";
+import type { Alternativa, Aviso, Brief, EntradaCostos, EstadoEntrevista, Explicacion, ItemCotizacion, Mensaje, ResultadoCostos, TablaVuoe, VerificacionIFC } from "./tipos";
 
 // En producción la API vive en la misma URL. Si la interfaz se publica aparte (por ejemplo en Vercel),
 // VITE_API_URL apunta al servidor de Render.
@@ -29,8 +29,14 @@ export const api = {
     post<{ brief: Brief; errores: string[]; estado: EstadoEntrevista; avisos: Aviso[] }>("/api/brief/aplicar", { brief, cambios }),
   alternativas: (brief: Brief) => post<{ brief: Brief; alternativas: Alternativa[]; avisos: Aviso[] }>("/api/alternativas", { brief }),
   explicar: (brief: Brief, alternativas: Alternativa[]) => post<Explicacion>("/api/comparacion/explicar", { brief, alternativas }),
-  ifc: (brief: Brief, alternativa: Alternativa) =>
-    post<{ nombre: string; verificacion: VerificacionIFC; archivo_base64: string }>("/api/ifc", { brief, alternativa }),
+  ifc: (brief: Brief, alternativa: Alternativa, costos?: EntradaCostos) =>
+    post<{ nombre: string; verificacion: VerificacionIFC; archivo_base64: string }>("/api/ifc", { brief, alternativa, costos }),
+  vuoe: () => fetch(`${BASE}/api/costos/vuoe`).then((r) => r.json()) as Promise<TablaVuoe>,
+  costos: (alternativa: Alternativa, entrada: EntradaCostos) => post<ResultadoCostos>("/api/costos/calcular", { alternativa, entrada }),
+  importarCotizacion: (nombre: string, base64: string) =>
+    post<{ archivo: string; metodo: string; items: ItemCotizacion[]; avisos: string[] }>("/api/cotizacion/importar", { nombre, base64 }),
+  exportarPaquete: (cuerpo: unknown) => post<{ nombre: string; archivo_base64: string; tamano_kb: number }>("/api/paquete/exportar", cuerpo),
+  importarPaquete: (nombre: string, base64: string) => post<any>("/api/paquete/importar", { nombre, base64 }),
   demo: () =>
     fetch(`${BASE}/api/demo`).then((r) => r.json()) as Promise<{ brief: Brief; alternativas: Alternativa[]; avisos: Aviso[]; conversacion: Mensaje[] }>,
 };

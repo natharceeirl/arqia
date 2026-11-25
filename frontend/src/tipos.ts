@@ -66,3 +66,40 @@ export interface VerificacionIFC {
 }
 
 export interface Decision { fecha: string; texto: string }
+
+export type Partida = "muros" | "techos" | "pisos" | "puertas_ventanas" | "revestimientos" | "banos" | "instalaciones";
+export interface CategoriaVuoe { categoria: string; valor_m2: number; descripcion: string }
+export interface TablaVuoe {
+  fuente: { nombre: string; vigencia: string; base_legal: string; publicado_por: string; url: string; ambito: string; unidad: string; naturaleza: string; estado_revision: string };
+  partidas: { id: Partida; nombre: string; categorias: CategoriaVuoe[] }[];
+  especificacion_por_defecto: Record<Partida, string>;
+}
+export interface ItemCotizacion {
+  id: string; descripcion: string; partida: Partida | "otros"; unidad: string; cantidad: number | null;
+  cantidad_origen: "modelo" | "usuario"; precio_unitario: number; moneda: string; incluir: boolean; fuente: string; verificado: boolean | null;
+}
+export interface EntradaCostos {
+  especificacion: Partial<Record<Partida, string>>;
+  por_ambiente: Record<string, Partial<Record<Partida, string>>>;
+  cotizacion: ItemCotizacion[];
+  reemplazos: Partida[];
+  terreno_valor_m2: number | null;
+  terreno_fuente: string | null;
+}
+export interface ResultadoCostos {
+  moneda: string;
+  especificacion: Record<Partida, string>;
+  espacios: { id: string; nombre: string; nivel: number; area_m2: number; categorias: Partial<Record<Partida, string>>; valor_m2: number; costo: number }[];
+  por_partida: { partida: Partida; nombre: string; categoria: string; valor_m2: number; monto: number; reemplazada: boolean }[];
+  por_nivel: { nivel: number; monto: number }[];
+  cantidades: Record<string, number>;
+  cotizacion: (ItemCotizacion & { cantidad: number; cantidad_modelo: number | null; subtotal: number })[];
+  totales: { vuoe: number; vuoe_incluido: number; cotizacion: number; construccion: number; construccion_m2: number; terreno: number | null; total: number };
+  terreno: { area_m2: number; valor_m2: number | null; fuente: string | null };
+  fuente: TablaVuoe["fuente"];
+}
+export interface Colores {
+  modo: "material" | "personalizado";
+  muroExt: string; muroInt: string; losa: string; vidrio: string; escalera: string;
+  pisoPublico: string; pisoPrivado: string; pisoServicio: string; pisoCirculacion: string;
+}

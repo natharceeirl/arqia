@@ -39,8 +39,8 @@ def _matriz(x, y, z, dx=1.0, dy=0.0):
 
 
 class ExportadorIFC:
-    def __init__(self, brief: Brief, alt: Alternativa):
-        self.brief, self.alt = brief, alt
+    def __init__(self, brief: Brief, alt: Alternativa, costos: dict | None = None):
+        self.brief, self.alt, self.costos = brief, alt, costos
         self.f = ifcopenshell.api.root.create_entity  # alias corto
         self.m = ifcopenshell.file(schema="IFC4")
         self.sb = ShapeBuilder(self.m)
@@ -64,6 +64,38 @@ class ExportadorIFC:
         rep = ifcopenshell.api.geometry.add_wall_representation(self.m, context=ctx, length=largo, height=alto,
                                                                 thickness=espesor, offset=-espesor / 2)
         ifcopenshell.api.geometry.assign_representation(self.m, product=prod, representation=rep)
+
+    def _costos(self, proyecto):
+        """Estimación de costos como IfcCostSchedule con un IfcCostItem por partida e ítem de cotización."""
+        import ifcopenshell.api.control
+        import ifcopenshell.api.cost
+        m, c = self.m, self.costos
+        moneda = ifcopenshell.api.unit.add_monetary_unit(m, currency="PEN")
+        ifcopenshell.api.unit.assign_unit(m, units=[moneda])
+        cron = ifcopenshell.api.cost.add_cost_schedule(m, name=f"Estimación referencial ARQIA, {self.alt.nombre}", predefined_type="ESTIMATE")
+        fuente = c["fuente"]
+        raiz = ifcopenshell.api.cost.add_cost_item(m, cost_schedule=cron)
+        ifcopenshell.api.cost.edit_cost_item(m, cost_item=raiz, attributes={
+            "Name": "Costo de construcción", "Identification": "ARQIA",
+            "Description": f"{fuente['nombre']}. {fuente['vigencia']}. {fuente['naturaleza']}."[:255]})
+
+        def item(padre, ident, nombre, monto, desc=""):
+            it = ifcopenshell.api.cost.add_cost_item(m, cost_item=padre)
+            ifcopenshell.api.cost.edit_cost_item(m, cost_item=it, attributes={"Name": nombre[:120], "Identification": ident, "Description": desc[:255]})
+            v = ifcopenshell.api.cost.add_cost_value(m, parent=it)
+            ifcopenshell.api.cost.edit_cost_value(m, cost_value=v, attributes={"AppliedValue": float(monto), "Name": "Monto (PEN)"})
+            return it
+
+        for p in c["por_partida"]:
+            if not p["reemplazada"]:
+                item(raiz, f"VUOE-{p['partida']}", f"{p['nombre']} (categoría {p['categoria']})", p["monto"],
+                     f"{p['valor_m2']} soles por m² de área techada")
+        for i in c["cotizacion"]:
+            if i["incluir"]:
+                item(raiz, f"COT-{i['id']}", i["descripcion"], i["subtotal"],
+                     f"{i['cantidad']} {i['unidad']} a {i['precio_unitario']}; fuente: {i['fuente']}")
+        if c["totales"].get("terreno"):
+            item(raiz, "TERRENO", "Terreno (valor arancelario)", c["totales"]["terreno"], c["terreno"].get("fuente") or "")
 
     def exportar(self) -> bytes:
         m, alt, b = self.m, self.alt, self.brief
@@ -196,6 +228,9 @@ class ExportadorIFC:
 
             ifcopenshell.api.spatial.assign_container(m, relating_structure=piso, products=contenidos)
 
+        if self.costos:
+            self._costos(proyecto)
+
         with tempfile.NamedTemporaryFile(suffix=".ifc", delete=False) as tmp:
             ruta = tmp.name
         m.write(ruta)
@@ -204,8 +239,8 @@ class ExportadorIFC:
         return datos
 
 
-def exportar_ifc(brief: Brief, alt: Alternativa) -> bytes:
-    return ExportadorIFC(brief, alt).exportar()
+def exportar_ifc(brief: Brief, alt: Alternativa, costos: dict | None = None) -> bytes:
+    return ExportadorIFC(brief, alt, costos).exportar()
 
 
 def verificar_ifc(datos: bytes, alt: Alternativa) -> dict:

@@ -24,6 +24,9 @@ TABLA = [
 ]
 
 
+GENERALES = ("tienda", "oficinas", "oficina administrativa", "area de trabajo", "salon", "local", "atencion", "venta", "comedor", "sala de estar", "showroom")
+
+
 def _n(t: str) -> str:
     return "".join(c for c in unicodedata.normalize("NFD", t.lower()) if unicodedata.category(c) != "Mn")
 
@@ -62,6 +65,14 @@ def completar_areas(brief: Brief) -> Brief:
         supuestos = [a for a in del_nivel if b.origen.get(f"ambientes.{n}.{a.nombre}.area") == "supuesto" and a.tipo != "servicio"]
         deficit = util - sum(a.area_objetivo_m2 or 0 for a in del_nivel)
         if supuestos and deficit > 0.15 * util:
-            principal = max(supuestos, key=lambda a: (a.tipo == "publico", a.area_objetivo_m2))
-            principal.area_objetivo_m2 = round(principal.area_objetivo_m2 + deficit, 1)
+            # el área libre va al ambiente "general" del nivel (tienda, oficinas, área de trabajo…);
+            # si no hay uno claro, se reparte en proporción entre los ambientes supuestos
+            generales = [a for a in supuestos if any(k in _n(a.nombre) for k in GENERALES)]
+            if generales:
+                principal = max(generales, key=lambda a: a.area_objetivo_m2)
+                principal.area_objetivo_m2 = round(principal.area_objetivo_m2 + deficit, 1)
+            else:
+                total = sum(a.area_objetivo_m2 for a in supuestos)
+                for a in supuestos:
+                    a.area_objetivo_m2 = round(a.area_objetivo_m2 + deficit * a.area_objetivo_m2 / total, 1)
     return b

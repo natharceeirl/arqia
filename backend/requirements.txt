@@ -6,3 +6,5 @@ ifcopenshell==0.9.0.post1
 numpy==2.5.3
 pyyaml==6.0.3
 anthropic==2.14.0
+openpyxl==3.1.5
+pypdf==6.17.0

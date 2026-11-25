@@ -18,10 +18,11 @@ interface Props {
   etiquetas?: boolean;
   cotas?: boolean;
   ajustar?: boolean; // true: alto automático según el ancho
+  costos?: Record<string, number>; // costo por id de espacio, para la etiqueta
 }
 
 /** Planta 2D en SVG generada desde el mismo modelo que el 3D y el IFC. Unidades: metros. */
-export default function Planta({ alt, nivel, seleccion, onSeleccion, escala = 30, etiquetas = true, cotas = true, ajustar = false }: Props) {
+export default function Planta({ alt, nivel, seleccion, onSeleccion, escala = 30, etiquetas = true, cotas = true, ajustar = false, costos }: Props) {
   const xs = alt.terreno.map((p) => p[0]);
   const ys = alt.terreno.map((p) => p[1]);
   const W = Math.max(...xs), D = Math.max(...ys);
@@ -133,6 +134,9 @@ export default function Planta({ alt, nivel, seleccion, onSeleccion, escala = 30
             <g key={e.id + "t"} pointerEvents="none" transform={chico ? `rotate(-90 ${X(cx)} ${Y(cy)})` : undefined}>
               <text x={X(cx)} y={Y(cy) - 2} fontSize={11.5} fontWeight={600} textAnchor="middle" fill="#1f2328">{e.nombre}</text>
               <text x={X(cx)} y={Y(cy) + 13} fontSize={10.5} textAnchor="middle" fill="#5e6168" style={{ fontFamily: "var(--mono)" }}>{e.area_m2.toFixed(2)} m²</text>
+              {costos?.[e.id] !== undefined && !chico && (
+                <text x={X(cx)} y={Y(cy) + 26} fontSize={10.5} textAnchor="middle" fill="#a64b2a" style={{ fontFamily: "var(--mono)" }}>S/ {Math.round(costos[e.id]).toLocaleString("es-PE")}</text>
+              )}
             </g>
           );
         })}

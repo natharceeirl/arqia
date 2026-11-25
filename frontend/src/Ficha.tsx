@@ -1,5 +1,5 @@
 import Planta from "./Planta";
-import { fmt, useArqia } from "./store";
+import { fmt, soles, useArqia } from "./store";
 import { EstadoFila } from "./Trabajo";
 
 export default function Ficha({ onIfc }: { onIfc: () => void }) {
@@ -10,6 +10,7 @@ export default function Ficha({ onIfc }: { onIfc: () => void }) {
   const ind = alt.indicadores as Record<string, number>;
   const hoy = new Date().toLocaleDateString("es-PE", { day: "numeric", month: "long", year: "numeric" });
   const pendientes = alt.verificaciones.filter((v) => v.estado !== "cumple");
+  const res = s.costos[alt.id];
   const supuestosBrief = Object.entries(b.origen).filter(([, v]) => v === "supuesto" || v === "desconocido").length;
 
   return (
@@ -82,6 +83,34 @@ export default function Ficha({ onIfc }: { onIfc: () => void }) {
             </tbody>
           </table>
         </section>
+
+        {res && (
+          <section>
+            <h2>Materiales y estimación de costos</h2>
+            <table className="tabla">
+              <thead><tr><th>Partida</th><th>Material (categoría oficial)</th><th>S/ por m²</th><th>Monto</th></tr></thead>
+              <tbody>
+                {res.por_partida.map((p) => {
+                  const desc = s.vuoe?.partidas.find((x) => x.id === p.partida)?.categorias.find((c) => c.categoria === p.categoria)?.descripcion;
+                  return (
+                    <tr key={p.partida} style={p.reemplazada ? { color: "var(--texto-2)", textDecoration: "line-through" } : undefined}>
+                      <td>{p.nombre}</td><td style={{ textAlign: "left" }}>{p.categoria}{desc ? `: ${desc}` : ""}</td><td className="num">{fmt(p.valor_m2)}</td><td className="num">{soles(p.monto)}</td>
+                    </tr>
+                  );
+                })}
+                {res.cotizacion.filter((i) => i.incluir).map((i) => (
+                  <tr key={i.id}><td>Cotización</td><td style={{ textAlign: "left" }}>{i.descripcion} ({fmt(i.cantidad)} {i.unidad})</td><td className="num">{fmt(i.precio_unitario)}</td><td className="num">{soles(i.subtotal)}</td></tr>
+                ))}
+                <tr><td><b>Construcción</b></td><td /><td className="num">{fmt(res.totales.construccion_m2)}</td><td className="num"><b>{soles(res.totales.construccion)}</b></td></tr>
+                {res.totales.terreno !== null && <tr><td>Terreno</td><td style={{ textAlign: "left" }}>{res.terreno.fuente}</td><td className="num">{fmt(res.terreno.valor_m2)}</td><td className="num">{soles(res.totales.terreno)}</td></tr>}
+                {res.totales.terreno !== null && <tr><td><b>Total</b></td><td /><td /><td className="num"><b>{soles(res.totales.total)}</b></td></tr>}
+              </tbody>
+            </table>
+            <p style={{ margin: "8px 0 0", fontSize: 11.5, color: "var(--texto-2)", lineHeight: 1.5 }}>
+              Fuente: {res.fuente.nombre}, {res.fuente.vigencia.toLowerCase()} ({res.fuente.base_legal}). {res.fuente.naturaleza}.
+            </p>
+          </section>
+        )}
 
         <section className="dos">
           <div>

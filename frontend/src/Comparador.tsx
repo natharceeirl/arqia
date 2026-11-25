@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "./api";
 import Planta from "./Planta";
-import { fmt, useArqia } from "./store";
+import { fmt, soles, useArqia } from "./store";
 
 const FILAS: { k: string; nombre: string; u: string; d: number; mayor: boolean }[] = [
   { k: "area_techada_m2", nombre: "Área techada", u: "m²", d: 2, mayor: true },
@@ -85,6 +85,16 @@ export default function Comparador() {
               </tr>
             );
           })}
+          {alts.every((a) => s.costos[a.id]) && (() => {
+            const v = alts.map((a) => s.costos[a.id].totales.construccion);
+            const min = Math.min(...v);
+            return (
+              <tr>
+                <td>Costo estimado de construcción</td>
+                {alts.map((a, i) => <td key={a.id} className={`num ${v.filter((x) => x === min).length === 1 && v[i] === min ? "mejor" : ""}`}>{soles(v[i])}</td>)}
+              </tr>
+            );
+          })()}
           <tr>
             <td>Acceso independiente a niveles superiores</td>
             {alts.map((a) => <td key={a.id}>{a.indicadores.acceso_independiente_superior ? "Sí" : "No"}</td>)}
