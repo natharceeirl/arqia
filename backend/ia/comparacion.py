@@ -95,10 +95,11 @@ def explicar(brief: dict, alternativas: list[dict]) -> dict:
         cliente = anthropic.Anthropic(api_key=clave, timeout=30.0, max_retries=1)
         resp = cliente.messages.create(
             model=MODELO, max_tokens=1500, tools=[HERRAMIENTA],
-            tool_choice={"type": "tool", "name": "redactar_comparacion"},
+            tool_choice={"type": "auto"},
             system=("Eres el Asistente ARQIA. Explicas a un cliente, en español claro y breve, las diferencias entre alternativas "
                     "arquitectónicas preliminares. Usa solo los indicadores y verificaciones entregados; no inventes cifras ni "
-                    "afirmes cumplimiento normativo. Cada alternativa: 2 o 3 ventajas y 1 o 2 desventajas. Nunca menciones que eres Claude."),
+                    "afirmes cumplimiento normativo. Cada alternativa: 2 o 3 ventajas y 1 o 2 desventajas. Nunca menciones que eres Claude. "
+                    "Responde únicamente llamando a la herramienta redactar_comparacion."),
             messages=[{"role": "user", "content": json.dumps({"preferencias": brief.get("preferencias"), "alternativas": resumen}, ensure_ascii=False)}],
         )
         datos = next(b.input for b in resp.content if b.type == "tool_use")

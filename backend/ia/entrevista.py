@@ -227,7 +227,7 @@ Hablas siempre en español, con frases cortas, tono profesional y cercano. Nunca
 Cómo trabajas en cada turno:
 1. Si el mensaje del usuario contiene datos, regístralos con actualizar_brief. Registra solo lo que el usuario dijo. Si dice que no sabe un dato opcional, usa 'desconocidos'.
 2. Si hay avisos activos pertinentes al tema que se conversa y aún no se mostraron, usa mostrar_aviso con sus identificadores.
-3. Termina siempre con preguntar: una sola pregunta sobre el siguiente dato que falta (se te indica cuál), con 2 a 4 opciones rápidas cuando tenga sentido.
+3. Responde solo mediante herramientas, nunca con texto suelto. Termina siempre con preguntar: una sola pregunta sobre el siguiente dato que falta (se te indica cuál), con 2 a 4 opciones rápidas cuando tenga sentido.
 
 Reglas estrictas:
 - No inventes medidas, áreas, costos ni resultados. Las áreas y la geometría las calcula el motor de ARQIA, no tú.
@@ -390,7 +390,7 @@ def turno(brief: Brief, historial: list[dict], mensaje: str | None, mostrados: l
 
     for _ in range(4):
         resp = cliente.messages.create(model=MODELO, max_tokens=1200, system=SISTEMA, tools=HERRAMIENTAS,
-                                       tool_choice={"type": "any"}, messages=mensajes)
+                                       tool_choice={"type": "auto"}, messages=mensajes)
         bloques = []
         for b in resp.content:
             if b.type == "text" and b.text:
@@ -398,6 +398,12 @@ def turno(brief: Brief, historial: list[dict], mensaje: str | None, mostrados: l
             elif b.type == "tool_use":
                 bloques.append({"type": "tool_use", "id": b.id, "name": b.name, "input": b.input})
         mensajes.append({"role": "assistant", "content": bloques})
+        if not any(b["type"] == "tool_use" for b in bloques):
+            # respondió solo con texto: se usa como pregunta (pasa por el verificador más abajo)
+            texto = " ".join(b["text"] for b in bloques if b["type"] == "text").strip()
+            if texto:
+                pregunta = {"pregunta": texto, "opciones": []}
+            break
         resultados = []
         for b in resp.content:
             if b.type != "tool_use":
